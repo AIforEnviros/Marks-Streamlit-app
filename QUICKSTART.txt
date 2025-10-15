@@ -1,0 +1,27 @@
+# ⚡ QUICK START
+
+## Install (one time):
+```bash
+pip install -r requirements.txt
+```
+
+## Run:
+```bash
+streamlit run streamlit_app.py
+```
+
+## Done!
+Browser opens automatically. Upload your CSV and start plotting.
+
+---
+
+## Batch Download All 80 Plots:
+1. Go to "Batch Download" tab
+2. Click "Generate All Plots"  
+3. Download ZIP (2-3 minutes)
+
+---
+
+**Stop app:** Press Ctrl+C in terminal
+
+**Need help?** See full README.md
