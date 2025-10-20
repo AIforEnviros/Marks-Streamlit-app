@@ -72,7 +72,8 @@ def load_data(uploaded_file):
 
 def create_plot(df, analyte, figsize=(14, 7), dpi=150,
                 date_min=None, date_max=None,
-                y_scale='linear', y_min=None, y_max=None):
+                y_scale='linear', y_min=None, y_max=None,
+                force_x_limits=False):
     """Create a plot for a specific analyte.
 
     Args:
@@ -85,6 +86,7 @@ def create_plot(df, analyte, figsize=(14, 7), dpi=150,
         y_scale: 'linear' or 'log' for Y-axis scale
         y_min: Minimum Y-axis value (optional, for manual scaling)
         y_max: Maximum Y-axis value (optional, for manual scaling)
+        force_x_limits: If True, force X-axis to show full date range even if no data
     """
     # Filter data for this analyte
     analyte_data = df[df['Analyte'] == analyte].copy()
@@ -125,6 +127,10 @@ def create_plot(df, analyte, figsize=(14, 7), dpi=150,
         new_ymin = y_min if y_min is not None else current_ylim[0]
         new_ymax = y_max if y_max is not None else current_ylim[1]
         ax.set_ylim(new_ymin, new_ymax)
+
+    # Set X-axis limits to ensure consistent date range across all plots (optional)
+    if force_x_limits and date_min is not None and date_max is not None:
+        ax.set_xlim(date_min, date_max)
 
     # Format x-axis dates
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %Y'))
@@ -229,7 +235,8 @@ def perform_mann_kendall_analysis(df, date_min=None, date_max=None):
 def create_all_plots_zip(df, analytes, progress_bar, status_text,
                          figsize=(14, 7), dpi=150,
                          date_min=None, date_max=None,
-                         y_scale='linear', y_min=None, y_max=None):
+                         y_scale='linear', y_min=None, y_max=None,
+                         force_x_limits=False):
     """Create a ZIP file containing all plots.
 
     Args:
@@ -244,6 +251,7 @@ def create_all_plots_zip(df, analytes, progress_bar, status_text,
         y_scale: 'linear' or 'log' for Y-axis scale
         y_min: Minimum Y-axis value (optional)
         y_max: Maximum Y-axis value (optional)
+        force_x_limits: If True, force X-axis to show full date range
     """
     zip_buffer = BytesIO()
 
@@ -258,7 +266,8 @@ def create_all_plots_zip(df, analytes, progress_bar, status_text,
             fig = create_plot(df, analyte,
                             figsize=figsize, dpi=dpi,
                             date_min=date_min, date_max=date_max,
-                            y_scale=y_scale, y_min=y_min, y_max=y_max)
+                            y_scale=y_scale, y_min=y_min, y_max=y_max,
+                            force_x_limits=force_x_limits)
 
             if fig is not None:
                 # Save to buffer
@@ -405,6 +414,14 @@ def main():
                         help="Leave empty for auto-scale"
                     )
 
+            # X-axis consistency option
+            st.markdown("**X-Axis Settings**")
+            force_consistent_x_axis = st.checkbox(
+                "📅 Force consistent X-axis range across all plots",
+                value=False,
+                help="When enabled, all plots will show the same date range (from start to end date above), even if some analytes have no data for certain periods. This makes all graphs directly comparable."
+            )
+
             # Convert dates to pandas Timestamp for filtering
             global_date_min = pd.Timestamp(global_date_min)
             global_date_max = pd.Timestamp(global_date_max)
@@ -498,7 +515,8 @@ def main():
                                         date_max=plot_date_max,
                                         y_scale=plot_y_scale,
                                         y_min=plot_y_min,
-                                        y_max=plot_y_max)
+                                        y_max=plot_y_max,
+                                        force_x_limits=force_consistent_x_axis)
 
                         if fig is not None:
                             st.pyplot(fig)
@@ -555,7 +573,8 @@ def main():
                                             date_max=global_date_max,
                                             y_scale=global_y_scale,
                                             y_min=global_y_min,
-                                            y_max=global_y_max)
+                                            y_max=global_y_max,
+                                            force_x_limits=force_consistent_x_axis)
 
                             if fig is not None:
                                 generated_plots.append((analyte, fig))
@@ -610,7 +629,8 @@ def main():
                                 date_max=global_date_max,
                                 y_scale=global_y_scale,
                                 y_min=global_y_min,
-                                y_max=global_y_max
+                                y_max=global_y_max,
+                                force_x_limits=force_consistent_x_axis
                             )
 
                         status_text.text("✓ All plots created!")
