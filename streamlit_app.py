@@ -73,7 +73,9 @@ def load_data(uploaded_file):
 def create_plot(df, analyte, figsize=(14, 7), dpi=150,
                 date_min=None, date_max=None,
                 y_scale='linear', y_min=None, y_max=None,
-                force_x_limits=False):
+                force_x_limits=False,
+                title_fontsize=18, axis_label_fontsize=16,
+                tick_fontsize=14, legend_fontsize=11):
     """Create a plot for a specific analyte.
 
     Args:
@@ -87,6 +89,10 @@ def create_plot(df, analyte, figsize=(14, 7), dpi=150,
         y_min: Minimum Y-axis value (optional, for manual scaling)
         y_max: Maximum Y-axis value (optional, for manual scaling)
         force_x_limits: If True, force X-axis to show full date range even if no data
+        title_fontsize: Font size for plot title
+        axis_label_fontsize: Font size for axis labels
+        tick_fontsize: Font size for tick labels
+        legend_fontsize: Font size for legend
     """
     # Filter data for this analyte
     analyte_data = df[df['Analyte'] == analyte].copy()
@@ -113,10 +119,13 @@ def create_plot(df, analyte, figsize=(14, 7), dpi=150,
                markersize=4, label=bore, alpha=0.8)
 
     # Formatting
-    ax.set_xlabel('Date', fontsize=12, fontweight='bold')
-    ax.set_ylabel('Value', fontsize=12, fontweight='bold')
-    ax.set_title(f'{analyte}', fontsize=14, fontweight='bold', pad=15)
+    ax.set_xlabel('Date', fontsize=axis_label_fontsize, fontweight='bold')
+    ax.set_ylabel('Value', fontsize=axis_label_fontsize, fontweight='bold')
+    ax.set_title(f'{analyte}', fontsize=title_fontsize, fontweight='bold', pad=15)
     ax.grid(True, alpha=0.3, linestyle='--')
+
+    # Set tick label font sizes
+    ax.tick_params(axis='both', which='major', labelsize=tick_fontsize)
 
     # Set Y-axis scale
     ax.set_yscale(y_scale)
@@ -140,10 +149,11 @@ def create_plot(df, analyte, figsize=(14, 7), dpi=150,
     # Add legend
     if len(bores) <= 15:
         ax.legend(title='Bore ID', bbox_to_anchor=(1.02, 1),
-                 loc='upper left', fontsize=9)
+                 loc='upper left', fontsize=legend_fontsize)
     else:
+        # Use slightly smaller font for many bores
         ax.legend(title='Bore ID', bbox_to_anchor=(1.02, 1),
-                 loc='upper left', fontsize=7, ncol=2)
+                 loc='upper left', fontsize=max(legend_fontsize - 2, 7), ncol=2)
 
     plt.tight_layout()
     return fig
@@ -236,7 +246,9 @@ def create_all_plots_zip(df, analytes, progress_bar, status_text,
                          figsize=(14, 7), dpi=150,
                          date_min=None, date_max=None,
                          y_scale='linear', y_min=None, y_max=None,
-                         force_x_limits=False):
+                         force_x_limits=False,
+                         title_fontsize=18, axis_label_fontsize=16,
+                         tick_fontsize=14, legend_fontsize=11):
     """Create a ZIP file containing all plots.
 
     Args:
@@ -252,6 +264,10 @@ def create_all_plots_zip(df, analytes, progress_bar, status_text,
         y_min: Minimum Y-axis value (optional)
         y_max: Maximum Y-axis value (optional)
         force_x_limits: If True, force X-axis to show full date range
+        title_fontsize: Font size for plot title
+        axis_label_fontsize: Font size for axis labels
+        tick_fontsize: Font size for tick labels
+        legend_fontsize: Font size for legend
     """
     zip_buffer = BytesIO()
 
@@ -267,7 +283,11 @@ def create_all_plots_zip(df, analytes, progress_bar, status_text,
                             figsize=figsize, dpi=dpi,
                             date_min=date_min, date_max=date_max,
                             y_scale=y_scale, y_min=y_min, y_max=y_max,
-                            force_x_limits=force_x_limits)
+                            force_x_limits=force_x_limits,
+                            title_fontsize=title_fontsize,
+                            axis_label_fontsize=axis_label_fontsize,
+                            tick_fontsize=tick_fontsize,
+                            legend_fontsize=legend_fontsize)
 
             if fig is not None:
                 # Save to buffer
@@ -314,6 +334,35 @@ def main():
         plot_width = st.slider("Plot Width", min_value=8, max_value=20, value=14, step=1)
         plot_height = st.slider("Plot Height", min_value=4, max_value=12, value=7, step=1)
         plot_dpi = st.select_slider("Plot Quality (DPI)", options=[100, 150, 200, 300], value=150)
+
+        st.markdown("---")
+
+        # Font size presets
+        st.subheader("Font Sizes")
+        font_preset = st.radio(
+            "Font Size Preset",
+            options=["Print - 2 per row (A4)", "Screen/Web viewing", "Custom"],
+            index=0,
+            help="Choose font sizes optimized for your output format"
+        )
+
+        # Define preset values
+        if font_preset == "Print - 2 per row (A4)":
+            title_fontsize = 18
+            axis_label_fontsize = 16
+            tick_fontsize = 14
+            legend_fontsize = 11
+        elif font_preset == "Screen/Web viewing":
+            title_fontsize = 14
+            axis_label_fontsize = 12
+            tick_fontsize = 10
+            legend_fontsize = 9
+        else:  # Custom
+            st.markdown("**Customize Font Sizes**")
+            title_fontsize = st.slider("Title Font Size", min_value=10, max_value=28, value=18, step=2)
+            axis_label_fontsize = st.slider("Axis Label Font Size", min_value=8, max_value=24, value=16, step=2)
+            tick_fontsize = st.slider("Tick Label Font Size", min_value=6, max_value=20, value=14, step=2)
+            legend_fontsize = st.slider("Legend Font Size", min_value=6, max_value=18, value=11, step=1)
 
         st.markdown("---")
         st.markdown("### 📖 How to Use")
@@ -516,7 +565,11 @@ def main():
                                         y_scale=plot_y_scale,
                                         y_min=plot_y_min,
                                         y_max=plot_y_max,
-                                        force_x_limits=force_consistent_x_axis)
+                                        force_x_limits=force_consistent_x_axis,
+                                        title_fontsize=title_fontsize,
+                                        axis_label_fontsize=axis_label_fontsize,
+                                        tick_fontsize=tick_fontsize,
+                                        legend_fontsize=legend_fontsize)
 
                         if fig is not None:
                             st.pyplot(fig)
@@ -574,7 +627,11 @@ def main():
                                             y_scale=global_y_scale,
                                             y_min=global_y_min,
                                             y_max=global_y_max,
-                                            force_x_limits=force_consistent_x_axis)
+                                            force_x_limits=force_consistent_x_axis,
+                                            title_fontsize=title_fontsize,
+                                            axis_label_fontsize=axis_label_fontsize,
+                                            tick_fontsize=tick_fontsize,
+                                            legend_fontsize=legend_fontsize)
 
                             if fig is not None:
                                 generated_plots.append((analyte, fig))
@@ -630,7 +687,11 @@ def main():
                                 y_scale=global_y_scale,
                                 y_min=global_y_min,
                                 y_max=global_y_max,
-                                force_x_limits=force_consistent_x_axis
+                                force_x_limits=force_consistent_x_axis,
+                                title_fontsize=title_fontsize,
+                                axis_label_fontsize=axis_label_fontsize,
+                                tick_fontsize=tick_fontsize,
+                                legend_fontsize=legend_fontsize
                             )
 
                         status_text.text("✓ All plots created!")
