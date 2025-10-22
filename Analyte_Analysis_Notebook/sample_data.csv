@@ -1,0 +1,51 @@
+Bore_ID,Date,Analyte,Value
+LCLBOR01,25/07/2016, Aluminium,12
+LCLBOR01,25/07/2016, Aluminium (filtered),0.05
+LCLBOR01,25/07/2016, Arsenic,0.021
+LCLBOR01,25/07/2016, Arsenic (filtered),0.017
+LCLBOR01,25/07/2016, Benzene,0.25
+LCLBOR01,20/10/2016, Aluminium,47
+LCLBOR01,20/10/2016, Aluminium (filtered),0.029
+LCLBOR01,20/10/2016, Arsenic,0.044
+LCLBOR01,20/10/2016, Arsenic (filtered),0.028
+LCLBOR01,20/10/2016, Benzene,0.5
+LCLBOR01,12/01/2017, Aluminium,15
+LCLBOR01,12/01/2017, Aluminium (filtered),0.0025
+LCLBOR01,12/01/2017, Arsenic,0.034
+LCLBOR01,12/01/2017, Arsenic (filtered),0.005
+LCLBOR01,12/01/2017, Benzene,0.25
+LCLBOR01,3/05/2017, Aluminium,50.1
+LCLBOR01,3/05/2017, Aluminium (filtered),0.005
+LCLBOR01,3/05/2017, Arsenic,0.057
+LCLBOR01,3/05/2017, Arsenic (filtered),0.026
+LCLBOR01,3/05/2017, Benzene,0.5
+LCLBOR01,20/07/2017, Aluminium,11.3
+LCLBOR01,20/07/2017, Aluminium (filtered),0.005
+LCLBOR01,20/07/2017, Arsenic,0.032
+LCLBOR01,20/07/2017, Arsenic (filtered),0.021
+LCLBOR01,20/07/2017, Benzene,0.5
+LCLBOR01,25/10/2017, Aluminium,9.13
+LCLBOR01,25/10/2017, Aluminium (filtered),0.005
+LCLBOR01,25/10/2017, Arsenic,0.025
+LCLBOR01,25/10/2017, Arsenic (filtered),0.021
+LCLBOR01,25/10/2017, Benzene,0.5
+LCLBOR01,15/01/2018, Aluminium,16.5
+LCLBOR01,15/01/2018, Aluminium (filtered),0.005
+LCLBOR01,15/01/2018, Arsenic,0.031
+LCLBOR01,15/01/2018, Arsenic (filtered),0.021
+LCLBOR01,15/01/2018, Benzene,0.5
+LCLBOR01,5/04/2018, Aluminium,14.6
+LCLBOR01,5/04/2018, Aluminium (filtered),0.005
+LCLBOR01,5/04/2018, Arsenic,0.026
+LCLBOR01,5/04/2018, Arsenic (filtered),0.018
+LCLBOR01,5/04/2018, Benzene,0.5
+LCLBOR01,9/07/2018, Aluminium,22.7
+LCLBOR01,9/07/2018, Aluminium (filtered),0.005
+LCLBOR01,9/07/2018, Arsenic,0.031
+LCLBOR01,9/07/2018, Arsenic (filtered),0.019
+LCLBOR01,9/07/2018, Benzene,0.5
+LCLBOR01,3/10/2018, Aluminium,9
+LCLBOR01,3/10/2018, Aluminium (filtered),0.005
+LCLBOR01,3/10/2018, Arsenic,0.021
+LCLBOR01,3/10/2018, Arsenic (filtered),0.017
+LCLBOR01,3/10/2018, Benzene,0.5
